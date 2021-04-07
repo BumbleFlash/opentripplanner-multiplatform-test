@@ -1,0 +1,35 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.4.10'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'MainKt'
+    }
+}
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'MainKt'
+    }
+    baseName = project.name
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    with jar
+}
+
+dependencies {
+    implementation "edu.usf.cutr.otp:library-jvm:1.0.2"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
+}
